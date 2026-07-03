@@ -1,11 +1,31 @@
 /* Forest Clock */
 
+/* Accent indirection: --wc-acc resolves to the theme accent by default.
+   The wclock-color / wclock-grad classes (set from settings) repoint it to
+   --wclock-accent, which the plugin sets inline. Theme mode touches nothing. */
+.forest-clock,
+.forest-clock-popup {
+  --wc-acc: var(--interactive-accent);
+  --wc-on: var(--text-on-accent, #fff);
+  --wc-dot: var(--text-accent);
+}
+
+.forest-clock.wclock-color,
+.forest-clock-popup.wclock-color,
+.forest-clock.wclock-grad,
+.forest-clock-popup.wclock-grad {
+  --wc-acc: var(--wclock-accent);
+  --wc-on: #fff;
+  --wc-dot: var(--wclock-accent);
+}
+
 .forest-clock {
   margin-inline-start: auto;
   display: inline-flex;
   align-items: center;
   align-self: center;   /* vertically centered */
   flex: 0 0 auto;       /* size to text */
+  gap: 0;
   padding: 5px 9px;     /* border*/
   cursor: pointer;
   -webkit-app-region: no-drag;
@@ -24,6 +44,46 @@
   background-color: var(--background-modifier-hover);
 }
 
+/* Header running indicator + timer */
+.forest-clock-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background-color: var(--wc-acc);
+  animation: wclock-pulse 2s ease-in-out infinite;
+}
+
+.forest-clock.wclock-grad .forest-clock-dot {
+  background-image: linear-gradient(120deg, var(--wclock-g1), var(--wclock-g2));
+}
+
+@keyframes wclock-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.forest-clock-sep {
+  margin: 0 5px;
+  opacity: 0.4;
+}
+
+.forest-clock-timer {
+  font-variant-numeric: tabular-nums;
+}
+
+.forest-clock.wclock-hdr-colored.wclock-color .forest-clock-timer {
+  color: var(--wclock-accent);
+}
+
+.forest-clock.wclock-hdr-colored.wclock-grad .forest-clock-timer {
+  background-image: linear-gradient(120deg, var(--wclock-g1), var(--wclock-g2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Popup card */
 .forest-clock-popup {
   box-sizing: border-box;
@@ -37,7 +97,7 @@
   font-size: 13px;
 }
 
-/* Stopwatch */
+/* Timer section (stopwatch / countdown) */
 .forest-sw {
   display: flex;
   flex-direction: column;
@@ -48,12 +108,101 @@
   border-bottom: 1px solid var(--background-modifier-border);
 }
 
+.forest-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.forest-sec-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.forest-mode-switch {
+  font-size: 11px;
+  padding: 2px 7px;
+  height: auto;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  box-shadow: none;
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  transition: color 0.1s ease, background-color 0.1s ease;
+}
+
+.forest-mode-switch:hover {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+}
+
+.forest-sw-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
 .forest-sw-display {
   font-size: 24px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--text-normal);
   letter-spacing: 0.5px;
+}
+
+.wclock-color .forest-sw-display {
+  color: var(--wclock-accent);
+}
+
+.wclock-grad .forest-sw-display {
+  background-image: linear-gradient(120deg, var(--wclock-g1), var(--wclock-g2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.forest-sw-display.forest-cd {
+  cursor: pointer;
+}
+
+/* Countdown duration editor (replaces the display while editing) */
+.forest-cd-edit {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  width: 130px;
+  text-align: center;
+  padding: 2px 4px;
+  background-color: var(--background-primary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+}
+
+.wclock-grad .forest-sw-display .forest-cd-edit {
+  background-image: none;
+  -webkit-text-fill-color: var(--text-normal);
+}
+
+/* Session label */
+.forest-sw-label {
+  width: 100%;
+  font-size: 12px;
+  padding: 4px 8px;
+  height: auto;
+  background-color: var(--background-primary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+}
+
+.forest-sw-label::placeholder {
+  color: var(--text-faint);
 }
 
 .forest-sw-buttons {
@@ -75,9 +224,9 @@
 }
 
 .forest-sw-buttons button:hover {
-  background-color: var(--interactive-accent);
-  color: var(--text-on-accent, #fff);
-  border-color: var(--interactive-accent);
+  background-color: var(--wc-acc);
+  color: var(--wc-on);
+  border-color: var(--wc-acc);
 }
 
 /* Calendar */
@@ -100,6 +249,12 @@
   font-weight: 600;
   color: var(--text-normal);
   font-size: 13px;
+  cursor: pointer;
+  border-radius: var(--radius-s);
+}
+
+.forest-cal-label:hover {
+  background-color: var(--background-modifier-hover);
 }
 
 .forest-cal-nav {
@@ -120,9 +275,9 @@
 }
 
 .forest-cal-nav:hover {
-  background-color: var(--interactive-accent);
-  color: var(--text-on-accent, #fff);
-  border-color: var(--interactive-accent);
+  background-color: var(--wc-acc);
+  color: var(--wc-on);
+  border-color: var(--wc-acc);
 }
 
 .forest-cal-grid {
@@ -132,6 +287,7 @@
 }
 
 .forest-cal-cell {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,13 +313,22 @@
 }
 
 .forest-cal-today {
-  background-color: var(--interactive-accent);
-  color: var(--text-on-accent, #fff);
+  background-color: var(--wc-acc);
+  color: var(--wc-on);
   font-weight: 700;
 }
 
 .forest-cal-today:hover {
-  background-color: var(--interactive-accent-hover, var(--interactive-accent));
+  background-color: var(--interactive-accent-hover, var(--wc-acc));
+}
+
+.wclock-color .forest-cal-today:hover,
+.wclock-grad .forest-cal-today:hover {
+  background-color: var(--wc-acc);
+}
+
+.wclock-grad .forest-cal-today {
+  background-image: linear-gradient(120deg, var(--wclock-g1), var(--wclock-g2));
 }
 
 /* Timestamp bar (top of popup) */
@@ -184,9 +349,9 @@
 }
 
 .forest-ts-bar:hover {
-  background-color: var(--interactive-accent);
-  color: var(--text-on-accent, #fff);
-  border-color: var(--interactive-accent);
+  background-color: var(--wc-acc);
+  color: var(--wc-on);
+  border-color: var(--wc-acc);
 }
 
 /* Divider between sections */
@@ -224,17 +389,21 @@
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   background-color: var(--background-modifier-hover);
-  color: var(--text-accent);
+  color: var(--wc-dot);
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--radius-s);
   cursor: pointer;
   transition: background-color 0.1s ease, color 0.1s ease;
 }
 
+.wclock-grad .forest-sw-chip {
+  color: var(--wclock-g1);
+}
+
 .forest-sw-chip:hover {
-  background-color: var(--interactive-accent);
-  color: var(--text-on-accent, #fff);
-  border-color: var(--interactive-accent);
+  background-color: var(--wc-acc);
+  color: var(--wc-on);
+  border-color: var(--wc-acc);
 }
 
 .forest-sw-chip-num {
@@ -245,11 +414,17 @@
   opacity: 0.6;
 }
 
-/* Calendar day daily note dot */
-.forest-cal-cell {
-  position: relative;
+/* Gradient hover fills (buttons, chips, bars, nav) */
+.wclock-grad .forest-sw-buttons button:hover,
+.wclock-grad .forest-ts-bar:hover,
+.wclock-grad .forest-cal-nav:hover,
+.wclock-grad .forest-sw-chip:hover {
+  background-image: linear-gradient(120deg, var(--wclock-g1), var(--wclock-g2));
+  border-color: transparent;
+  color: #fff;
 }
 
+/* Calendar day daily note dot */
 .forest-cal-dot {
   position: absolute;
   bottom: 2px;
@@ -258,9 +433,13 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background-color: var(--text-accent);
+  background-color: var(--wc-dot);
+}
+
+.wclock-grad .forest-cal-dot {
+  background-color: var(--wclock-g1);
 }
 
 .forest-cal-today .forest-cal-dot {
-  background-color: var(--text-on-accent, #fff);
+  background-color: var(--wc-on);
 }
