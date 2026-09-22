@@ -4,11 +4,9 @@ A small clock that lives in Obsidian's left-sidebar header. Click it for a pomod
 
 It's styled with Obsidian's own CSS variables, no hardcoded colors, so it adopts whatever theme you're using (light or dark, sharp or rounded) and looks native on any theme. An optional accent override in settings takes a custom color or one of six gradient colorways. The theme-native default stays unless changed.
 
-<p><img src="./images/header.png" alt="Clock in the sidebar header">
-   <img src="./images/header1.png" alt="Clock with a running timer">
-</p> 
+<p><img src="./images/header-1.2.1.png" alt="Clock in the sidebar header, shown in bold"></p>
 
-![dropdown default](./images/dropdown1.1.png) ![dropdown themed](./images/dropdown11.1.png)
+![Clock popup with the pomodoro timer and daily-note calendar](./images/dropdown1.1.png)
 ## Features
 
 - **Clock** in the sidebar header (`H:MM AM/PM`), updates every minute
