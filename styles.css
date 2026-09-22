@@ -39,6 +39,11 @@
   transition: color 0.1s ease, background-color 0.1s ease;
 }
 
+/* "Bold clock" setting — the time of day only; the timer keeps its own weight */
+.forest-clock.wclock-bold .forest-clock-time {
+  font-weight: var(--font-bold, 700);
+}
+
 .forest-clock:hover {
   color: var(--text-normal);
   background-color: var(--background-modifier-hover);

@@ -35,6 +35,7 @@ It's styled with Obsidian's own CSS variables, no hardcoded colors, so it adopts
   display a specific zone
 - **Session log target** - where the Log button writes, daily note (default) or the active note
 - **Header shows while running** - clock + dot (default), timer replaces clock, or `clock | timer` side by side
+- **Bold clock** - show the current time in the header in bold
 - **Accent** - follow the theme (default), a custom color, or a gradient
 - **Colorway** - Forest / Sunset / Ocean / Candy / Ember / Mono, or Custom with two color stops
 - **Color the header clock** - apply the accent to the running timer in the header; off by default so the header stays theme-native

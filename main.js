@@ -23,6 +23,7 @@ const DEFAULT_SETTINGS = {
   gradientB: "#11998e",
   headerDisplay: "clock", // while a timer runs: "clock" (+dot) | "timer" | "both"
   colorHeaderTimer: false,
+  boldClock: false,
 };
 
 const GRADIENT_PRESETS = {
@@ -346,6 +347,8 @@ module.exports = class ForestClock extends Plugin {
       }
       el.toggleClass("wclock-hdr-colored", !!s.colorHeaderTimer);
     });
+    // Header-only: bolds the time of day, never the running timer beside it
+    if (this.clockEl) this.clockEl.toggleClass("wclock-bold", !!s.boldClock);
   }
 
   // Time helpers
@@ -422,13 +425,13 @@ module.exports = class ForestClock extends Plugin {
           cls: "forest-clock-timer",
         });
       } else if (running && mode === "both") {
-        this.hdrClockSpan = this.clockEl.createSpan();
+        this.hdrClockSpan = this.clockEl.createSpan({ cls: "forest-clock-time" });
         this.clockEl.createSpan({ cls: "forest-clock-sep", text: "|" });
         this.hdrTimerSpan = this.clockEl.createSpan({
           cls: "forest-clock-timer",
         });
       } else {
-        this.hdrClockSpan = this.clockEl.createSpan();
+        this.hdrClockSpan = this.clockEl.createSpan({ cls: "forest-clock-time" });
         if (running) this.clockEl.createSpan({ cls: "forest-clock-dot" });
       }
     }
@@ -1243,6 +1246,17 @@ class ClockSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl).setName("Appearance").setHeading();
+
+    new Setting(containerEl)
+      .setName("Bold clock")
+      .setDesc("Show the current time in the header in bold.")
+      .addToggle((t) =>
+        t.setValue(s.boldClock).onChange(async (v) => {
+          s.boldClock = v;
+          this.plugin.persist();
+          this.plugin.applyAccent();
+        })
+      );
 
     new Setting(containerEl)
       .setName("Accent")
