@@ -1,10 +1,11 @@
 # Obsidian vault data
 data.json
 
-# OS / editor cruft
+# OS / editor / agent cruft
 .DS_Store
 Thumbs.db
 *.log
+.claude/
 
 # Node
 node_modules/
